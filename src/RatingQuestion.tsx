@@ -1,10 +1,20 @@
 import React, {Component} from 'react';
 import RatingQuestionOption from './RatingQuestionOption';
 
-class RatingQuestion extends Component{
+interface RatingQuestionProps {
+  id: number,
+  title: string,
+  deleteQuestion(id: number): void
+}
+
+interface RatingQuestionState {
+  selectedOption: string | null
+}
+
+class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState> {
   state = { selectedOption: null }
 
-  optionSelected = (option) => {
+  optionSelected = (option: string) => {
     this.setState({ selectedOption: option});
   }
 

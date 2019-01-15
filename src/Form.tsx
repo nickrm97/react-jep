@@ -1,7 +1,21 @@
 import React, {Component} from 'react';
+import { Question } from './QuestionTypes';
+interface FormProps {
+    // This defines a new type called formprops :)
+    addQuestion(question: Question): void
+}
 
-class Form extends Component{
-    constructor(props){
+interface FormState {
+    value: string
+}
+
+interface RatingQuestionResponse{
+    data: Question
+}
+
+
+class Form extends Component<FormProps, FormState>{
+    constructor(props: FormProps){
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -9,11 +23,11 @@ class Form extends Component{
     }
 
 
-    handleChange(event){
-        this.setState({value: event.target.value});
+    handleChange(bob: React.FormEvent){
+        this.setState({value: (bob.target as HTMLInputElement).value}); // ? html elements do have a value, we represent it as an html input element ?
     }
     
-    handleSubmit = (event) =>{
+    handleSubmit = (event: React.FormEvent) =>{
         if (window.confirm("Are you sure you want to add " + this.state.value)){
             // Stops submission event happening
             event.preventDefault();
@@ -21,7 +35,7 @@ class Form extends Component{
             // Now lets post something 
             const axios = require('axios');
             axios.post("http://localhost:3001/ratingQuestions", {title: this.state.value})
-                .then( response => this.props.addQuestion(response.data))
+                .then( (response: RatingQuestionResponse) => this.props.addQuestion(response.data))
             this.setState({value: ""})
         }
     }    
