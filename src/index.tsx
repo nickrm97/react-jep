@@ -1,39 +1,56 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import axios from 'axios';
 
 import RatingQuestion from './RatingQuestion';
 import Form from './Form';
 import './style.css';
 
+export interface Question{
+  id: number,
+  title: string
+}
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
+interface AppState{
+  // How does state know that app state is related to the state object??
+  name: string,
+  data: Question[]
+}
+
+// Response is a custom datatype, which features an array of questions essentially.
+interface Response{
+  data: Question[]
+}
+
+class App extends Component<{}, AppState> {
+    state = {
       name: 'React',
       data: []
-    };
-  }
+    }
+
+
+    nicksfunstate = {
+      name: "bob",
+      id: 2
+    }
 
   componentDidMount(){
-    const axios = require('axios');
     axios.get('http://localhost:3001/ratingQuestions')
-      .then(response => this.setState({ data: response.data })
+      .then((response: Response) => this.setState({ data: (response.data as Question[])})
       )
   } 
   
-  addQuestion = (question) => {
-    let newQuestions = this.state.data.concat(question)
+  addQuestion = (question: Question):void => {
+    let newQuestions = (this.state.data as Question[]).concat(question)
     this.setState({data: newQuestions})
   }
 
-  deleteQuestion = (id) => {
+  deleteQuestion = (id: number): void => {
     // Removing from state
-    let newArray = this.state.data.filter(function(obj){ return obj.id !== id});
+    let newArray = this.state.data.filter(function(obj: Question){ return obj.id !== id});
     this.setState({data: newArray});
 
     // DELETE request to api, delete object
-    const axios = require('axios');
     axios.delete(`http://localhost:3001/ratingQuestions/${id}`)
      .then(response => console.log(response))
      .catch(err => console.log(err))
