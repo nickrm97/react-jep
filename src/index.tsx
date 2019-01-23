@@ -5,6 +5,7 @@ import axios from 'axios';
 import RatingQuestion from './RatingQuestion';
 import Form from './Form';
 import './style.css';
+import { object } from 'prop-types';
 
 export interface Question{
   id: number,
@@ -12,7 +13,6 @@ export interface Question{
 }
 
 interface AppState{
-  // How does state know that app state is related to the state object??
   name: string,
   data: Question[]
 }
@@ -28,14 +28,8 @@ class App extends Component<{}, AppState> {
       data: []
     }
 
-
-    nicksfunstate = {
-      name: "bob",
-      id: 2
-    }
-
   componentDidMount(){
-    axios.get('http://localhost:3001/ratingQuestions')
+    axios.get('http://localhost:4567/ratingQuestions')
       .then((response: Response) => this.setState({ data: (response.data as Question[])})
       )
   } 
@@ -45,13 +39,19 @@ class App extends Component<{}, AppState> {
     this.setState({data: newQuestions})
   }
 
+  updateQuestion = (id: number, title: string) => {
+    // axios.get('http://localhost:4567/ratingQuestions')
+    // .then((response: Response) => this.setState({ data: (response.data as Question[])})
+    // )
+  }
+
   deleteQuestion = (id: number): void => {
     // Removing from state
     let newArray = this.state.data.filter(function(obj: Question){ return obj.id !== id});
     this.setState({data: newArray});
 
     // DELETE request to api, delete object
-    axios.delete(`http://localhost:3001/ratingQuestions/${id}`)
+    axios.delete(`http://localhost:4567/ratingQuestions/${id}`)
      .then(response => console.log(response))
      .catch(err => console.log(err))
   }
@@ -59,9 +59,9 @@ class App extends Component<{}, AppState> {
   render() {
     return (
       <div>
-        <h1> Nick's fun surveys</h1>
+        <h1> Nicks fun surveys</h1>
         <h2>Add Questions:</h2>
-        <Form addQuestion={this.addQuestion}/>
+        <Form addQuestion={this.addQuestion} />
         <h2>Current Questions:</h2>
         {this.renderRatingQuestions()}
       </div>

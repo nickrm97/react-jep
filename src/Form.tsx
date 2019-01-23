@@ -30,7 +30,7 @@ class Form extends Component<FormProps, FormState>{
             
             // Now lets post something 
             // const axios = require('axios');
-            axios.post("http://localhost:3001/ratingQuestions", {title: this.state.value})
+            axios.post("http://localhost:4567/ratingQuestions", {title: this.state.value})
                 .then( response => this.props.addQuestion((response.data as Question)))
             this.setState({value: ""})
         }
