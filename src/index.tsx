@@ -39,11 +39,17 @@ class App extends Component<{}, AppState> {
     this.setState({data: newQuestions})
   }
 
-  updateQuestion = (id: number, title: string) => {
-    // axios.get('http://localhost:4567/ratingQuestions')
-    // .then((response: Response) => this.setState({ data: (response.data as Question[])})
-    // )
-  }
+  // updateQuestion = (id: number, title: string) => {
+
+  //   // Find the question object we are going to manipulate
+  //   const foundIndex = this.state.data.findIndex((x => x.id === id)
+    
+  //   if (foundIndex !== void 0){
+  //     this.state.data[foundIndex].title = title
+  //   }
+
+  //   // // Now do something to update the state...
+  // }
 
   deleteQuestion = (id: number): void => {
     // Removing from state
@@ -59,7 +65,7 @@ class App extends Component<{}, AppState> {
   render() {
     return (
       <div>
-        <h1> Nicks fun surveys</h1>
+        <h1>Nicks fun surveys</h1>
         <h2>Add Questions:</h2>
         <Form addQuestion={this.addQuestion} />
         <h2>Current Questions:</h2>

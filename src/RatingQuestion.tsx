@@ -13,11 +13,17 @@ interface RatingQuestionProps{
 
 interface RatingQuestionState{
   selectedOption: null | string,
+  title: string,
   edit: boolean
 }
 
 class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState>{
-  state = { selectedOption: null, edit:false }
+  state = { selectedOption: null, edit:false, title: '' }
+
+  componentDidMount(){
+    this.setState({title: this.props.title})
+  }
+
 
   optionSelected = (option: string) => {
     this.setState({ selectedOption: option});
@@ -34,17 +40,15 @@ class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState>
   }
 
   updateTitle = (title: string) => {
-    this.setState({edit:false})
+    this.setState({edit:false, title})
     axios.patch(`http://localhost:4567/ratingQuestions/${this.props.id}`, {title}).then(response => console.log(response)).catch(err => console.log(err))
-    // Now force a get request on the index, so we can refresh all the data
-    // this.props.updateQuestion(this.props.id, title);
   }
 
   renderQuestionOrEdit = () =>{
     if(this.state.edit){
       return(
         <div>
-          <EditQuestion value={this.props.title} updateTitle={this.updateTitle} />
+          <EditQuestion value={this.state.title} updateTitle={this.updateTitle} />
         </div>
       )
     }
@@ -52,7 +56,7 @@ class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState>
       return(
         <div>
           <h3>
-            {this.props.title} 
+            {this.state.title} 
             <button onClick={this.confirmEdit}>Edit Question</button>
             <button onClick={this.confirmDelete}>Delete Question</button>
           </h3>
