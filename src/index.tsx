@@ -39,18 +39,6 @@ class App extends Component<{}, AppState> {
     this.setState({data: newQuestions})
   }
 
-  // updateQuestion = (id: number, title: string) => {
-
-  //   // Find the question object we are going to manipulate
-  //   const foundIndex = this.state.data.findIndex((x => x.id === id)
-    
-  //   if (foundIndex !== void 0){
-  //     this.state.data[foundIndex].title = title
-  //   }
-
-  //   // // Now do something to update the state...
-  // }
-
   deleteQuestion = (id: number): void => {
     // Removing from state
     let newArray = this.state.data.filter(function(obj: Question){ return obj.id !== id});
