@@ -5,7 +5,6 @@ import axios from 'axios';
 import RatingQuestion from './RatingQuestion';
 import Form from './Form';
 import './style.css';
-import { object } from 'prop-types';
 
 export interface Question{
   id: number,
@@ -30,23 +29,26 @@ class App extends Component<{}, AppState> {
 
   componentDidMount(){
     axios.get('http://localhost:4567/ratingQuestions')
-      .then((response: Response) => this.setState({ data: (response.data as Question[])})
-      )
-  } 
-  
-  addQuestion = (question: Question):void => {
-    let newQuestions = (this.state.data as Question[]).concat(question)
-    this.setState({data: newQuestions})
+      .then((response: Response) => {
+        this.setState({data: response.data})
+      })
+  }
+
+  addQuestion = (title: string): void => {
+    axios.post("http://localhost:4567/ratingQuestions", { title })
+      .then((res) => {
+        let newQuestions = (this.state.data as Question[]).concat(res.data)
+        this.setState({data: newQuestions})
+      })
   }
 
   deleteQuestion = (id: number): void => {
-    // Removing from state
-    let newArray = this.state.data.filter(function(obj: Question){ return obj.id !== id});
-    this.setState({data: newArray});
-
     // DELETE request to api, delete object
     axios.delete(`http://localhost:4567/ratingQuestions/${id}`)
-     .then(response => console.log(response))
+     .then(() => {
+        let newArray = this.state.data.filter((obj: Question) => { return obj.id !== id});
+        this.setState({data: newArray});
+     })
      .catch(err => console.log(err))
   }
 
@@ -63,7 +65,9 @@ class App extends Component<{}, AppState> {
   }
 
   renderRatingQuestions(){
-    return this.state.data.map((x, i) => <RatingQuestion key={i} deleteQuestion={this.deleteQuestion} {...x} />)
+    return this.state.data.map((question: Question) => {
+      return <RatingQuestion key={question.id} deleteQuestion={this.deleteQuestion} {...question} />
+    })
   }
 
 }
