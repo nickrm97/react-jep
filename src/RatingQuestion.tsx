@@ -7,8 +7,7 @@ import axios from 'axios';
 interface RatingQuestionProps{
   id: number,
   title: string,
-  updateQuestion(id: number, title: string):void,
-  deleteQuestion(id: number):void
+  deleteQuestion(id: number): void
 }
 
 interface RatingQuestionState{
@@ -18,12 +17,11 @@ interface RatingQuestionState{
 }
 
 class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState>{
-  state = { selectedOption: null, edit:false, title: '' }
-
-  componentDidMount(){
-    this.setState({title: this.props.title})
+  state = {
+    selectedOption: null,
+    edit: false,
+    title: this.props.title
   }
-
 
   optionSelected = (option: string) => {
     this.setState({ selectedOption: option});
@@ -36,12 +34,14 @@ class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState>
   confirmDelete = () => {
     if (window.confirm("Delete question?")){
       this.props.deleteQuestion(this.props.id);
-    } 
+    }
   }
 
   updateTitle = (title: string) => {
-    this.setState({edit:false, title})
-    axios.patch(`http://localhost:4567/ratingQuestions/${this.props.id}`, {title}).then(response => console.log(response)).catch(err => console.log(err))
+    axios.patch(`http://localhost:4567/ratingQuestions/${this.props.id}`, {title})
+      .then(response => {
+        this.setState({edit:false, title})
+      })
   }
 
   renderQuestionOrEdit = () =>{
@@ -52,16 +52,17 @@ class RatingQuestion extends Component<RatingQuestionProps, RatingQuestionState>
         </div>
       )
     }
-    else{
+    else {
+      const {title, selectedOption} = this.state;
       return(
         <div>
           <h3>
-            {this.state.title} 
+            {title}
             <button onClick={this.confirmEdit}>Edit Question</button>
             <button onClick={this.confirmDelete}>Delete Question</button>
           </h3>
-          <p> State: {this.state.selectedOption}</p>
-          
+          <p> State: {selectedOption}</p>
+
           <form>
             {this.renderRatingValues()}
           </form>
